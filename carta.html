@@ -145,7 +145,7 @@
             position: relative;
             width: 90%;
             max-width: 500px;
-            height: 600px;
+            height: 700px;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
@@ -353,13 +353,40 @@
         .modal img { max-width: 90%; max-height: 90%; border: 2px solid white; }
         .modal-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
 
+        .scroll-arrow {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            animation: bounce 1.5s infinite;
+        }
+
+        /* Animación tipo salto */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* Clase para mostrarla */
+        .show-arrow {
+            opacity: 1;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 600px) {
             .names-container { font-size: 3.5rem; }
             .day-number { font-size: 6rem; }
             .blessing-text { font-size: 2.5rem; }
             .details-title { font-size: 2.8rem; }
-            .carousel-container { height: 250px; }
+            .carousel-container { height: 400px; }
             .intro-text-top { font-size: 2rem; }
         }
     </style>
@@ -380,7 +407,7 @@
         Your browser does not support the audio element.
         </audio>
 
-    <section class="section-date">
+    <section id="section-date" class="section-date">
         <div class="date-block reveal">
             <div class="day-number">6</div>
             <div class="month-year">Marzo 2026</div>
@@ -398,7 +425,7 @@
         </a>
     </section>
 
-    <section class="section-story">
+    <section id="section-story" class="section-story">
         <div class="story-card reveal">
             <div class="story-content">
                 <p class="story-text-formal">“Después de una hermosa historia de amor, ha llegado el momento de dar el gran paso.”</p>
@@ -413,7 +440,7 @@
         </div>
     </section>
 
-    <section class="section-parents">
+    <section id="section-parents" class="section-parents">
         <div class="blessing-text reveal">Con la bendición de Dios y nuestros padres</div>
         
         <div class="parents-grid">
@@ -422,7 +449,7 @@
                 <div class="parents-names">
                     Yisela Bautista <br>
                     &<br>
-                    Salvador Arévalo
+                    Salvador Arévalo ✞
                 </div>
             </div>
 
@@ -437,7 +464,7 @@
         </div>
     </section>
 
-    <section class="section-details">
+    <section id="section-details" class="section-details">
         <div class="details-white-card reveal">
             <h2 class="details-title">Ceremonia & Recepción</h2>
             <div class="location-title">Ubicación</div>
@@ -467,7 +494,7 @@
         </div>
     </section>
 
-    <section class="section-bible">
+    <section id="section-bible" class="section-bible">
         <div class="reveal">
             <p class="bible-verse">
                 "El matrimonio es un pacto con Dios. Por consiguiente, ya no son dos, sino una sola carne. Por tanto, lo que Dios ha unido, ningún hombre lo separe."
@@ -480,6 +507,11 @@
     <div class="modal" id="imageModal">
         <span class="modal-close" onclick="closeModal()">&times;</span>
         <img id="modalImg" src="">
+    </div>
+
+        <!-- Flecha flotante -->
+    <div id="scrollArrow" class="scroll-arrow">
+        ↓
     </div>
 
     <script>
@@ -547,6 +579,48 @@
         function closeModal() {
             document.getElementById("imageModal").style.display = "none";
         }
+
+        const arrow = document.getElementById("scrollArrow");
+
+        // Lista de secciones en orden
+        const sections = [
+            "section-date",
+            "section-story",
+            "section-parents",
+            "section-details",
+            "section-bible"
+        ];
+
+        let currentIndex = 0;
+        let arrowTimeout;
+
+        // Función para mostrar la flecha después de 3s
+        function showArrowWithDelay() {
+            clearTimeout(arrowTimeout);
+
+            arrowTimeout = setTimeout(() => {
+                if (currentIndex < sections.length) {
+                    arrow.classList.add("show-arrow");
+                }
+            }, 3000);
+        }
+
+        // Cuando hacen click
+        arrow.addEventListener("click", () => {
+            if (currentIndex < sections.length) {
+                document.getElementById(sections[currentIndex]).scrollIntoView({
+                    behavior: "smooth"
+                });
+
+                arrow.classList.remove("show-arrow");
+                currentIndex++;
+
+                showArrowWithDelay();
+            }
+        });
+
+        showArrowWithDelay();
+
     </script>
 
 </body>
